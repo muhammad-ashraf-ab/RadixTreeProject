@@ -18,8 +18,13 @@ private:
         // Number of characters in the node (includes the null character - if it exists)
         int len;
 
-        Node* link;
+        // The following two pointers are the core operational linker nodes of the radix tree
+
+        // ---- The "next" node. This resembles a "sister" node to the current node, meaning that it is at the same tree level
         Node* next;
+
+        // ---- The "link" node. This resembles a "child" node from the next tree level, not necessarily the only child
+        Node* link;
 
         // Basic constructor, initializes the node members as follows:
         // -- Node length:  n
@@ -52,31 +57,31 @@ private:
     // --------------------------------------------------------------------------------
     // Finder function, responsible for finding key "x" in tree of root node "t"
     Node* find(Node* t, char* x, int n = 0);
-    // Returns the node corresponding to "x", if found
+    // Returns pointer to the node corresponding to "x", if found
     // --------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------
-    // Splitting function, 
+    // Splitting function, responsible for splitting a node into two at "k"
+    // Used as part of the insertion process
     void split(Node* t, int k);
-    // Returns
     // --------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------
-    // Insertion function,
+    // Insertion function, responsible for inserting a node in its right position
     Node* insert(Node* t, char* x, int n = 0);
-    // Returns
+    // Returns pointer to the inserted node
     // --------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------
-    // Joining function,
+    // Joining function, responsible for joining a node with its link
+    // Used as part of the removal process
     void join(Node* t);
-    // Returns
     // --------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------
-    // Removal function,
+    // Removal function, responsible for removing key "x" in tree of root node "t"
     Node* remove(Node* t, char* x, int n = 0);
-    // Returns
+    // Returns pointer to the node that takes place of removed node
     // --------------------------------------------------------------------------------
 
 public:
@@ -84,7 +89,7 @@ public:
     // Basic constructor, initializes root node to NULL
     RadixTree() : root(0) {};
 
-
+    // Auxiliary public functions, names self-explanatory.
     void addString(char* str);
     void deleteString(char* str);
     bool searchString(char* str);

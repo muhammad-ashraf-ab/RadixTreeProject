@@ -31,86 +31,170 @@ RadixTree::Node* RadixTree::find(Node* t, char* x, int n)
     // the prefix function is provided the size of both character arrays INCLUDING the null character
     int k = prefix(x, n, t->key, t->len);
 
-    // if there's nothing in common, repeat the process for the next child
+    // if there's nothing in common, repeat the process for the next node in this tree level
     if (k == 0) return find(t->next, x, n);
 
-    // if the entirety of "x" is a prefix of the current node, return it, this is the node we're looking for
+    // if all of "x" is prefix, this means the current node IS "x" itself, so return it
     if (k == n) return t;
 
     // if the entirety of the current node is a prefix itself...
-    // this means that the string we're looking for could cover more than one node...
+    // this means that the string we're looking for could span more than one node...
     // therefore, continue searching for the remaining part of the searched-for value... how?
+    // go to the node that links this tree level to the next level, a.k.a. t->link, and inside it...
     // "x + k" makes us skip ahead the prefix found and search for the rest of the string, meanwhile...
     // "n - k" is the size of the rest of the string.
     if (k == t->len) return find(t->link, x + k, n - k);
     return 0;
 }
 
-void RadixTree::split(Node* t, int k) // dividing t node according to k key symbol 
+void RadixTree::split(Node* t, int k)
 {
-    Node* p = new Node(t->key + k, t->len - k);
-    p->link = t->link;
-    t->link = p;
+    // Let's use the following example to explain this function:
 
+    // Split the following node at position 4:  [parent ---- "ABCDEF null" ---- child]
+    // Required Result:                         [parent ---- "ABCD" ---- "EF null" ---- child]
+
+    // Create a node that carries everything after the first "k" characters in the current node
+    Node* p = new Node(t->key + k, t->len - k); // In our example, this means: p = "EF null"
+
+    // Set this newly created node's link/child node as the current one's (maintaining sequentiality)
+    p->link = t->link; // In our example, this means: p = "EF null" ---- child
+
+    // Set the current node's link/child as the newly created node
+    t->link = p; // In our example, this means: t = "ABCDEF null" ---- "EF null" ---- child
+
+    // Now take the first "k" characters and place them in a temporary character array
     char* a = new char[k];
     for (int i = 0; i < k; i++) a[i] = t->key[i];
 
+    // Delete the current key and replace it with the temporary character array just created, with its size
     delete[] t->key;
     t->key = a;
     t->len = k;
+
+    // In our example, this means: t = "ABCD" ---- "EF null" ---- child
+    // Successfully splitting the node at position 4.
 }
 
-RadixTree::Node* RadixTree::insert(Node* t, char* x, int n) // inserting x key in t tree 
+RadixTree::Node* RadixTree::insert(Node* t, char* x, int n)
 {
+    // if n is uninitialized, its value is set as the size of "x" (INCLUDING null character, i.e. size of "abc" is 4)
+    // this is consistent with the expected value of the "len" member of each node: number of character, null included
     if (!n) while (x[n++]);
+
+    // if current tree node "t" is null, this means we've reached our insertion point, hence create and return the node
+    // notice that this function is used either within another function (like addString) or recursively within itself...
+    // i.e. the returned node goes to the root of the tree or somewhere else in it, based on the original function caller
     if (!t) return new Node(x, n);
+
+    // otherwise, if node has value, find the common prefix between it and the key to be inserted, "x"
+    // the prefix function is provided the size of both character arrays INCLUDING the null character
     int k = prefix(x, n, t->key, t->len);
+
+    // if there's nothing in common, attempt to insert the node to be inserted in the "next" node of the current node
     if (k == 0) t->next = insert(t->next, x, n);
+
+    // otherwise, if part of the current node is a prefix of the key to be added...
+    // observe the following examples of current nodes for key ABCF-null:
+    // 1. current node: ABCDE-null,    ... k < n (3 < 5)
+    // 2. current node: ABC-null,      ... k < n (3 < 5)
+    // 3. current node: ABCF,          ... k < n (4 < 5)
+    // 4. current node: ABCF-null,     ... k = n (5 = 5) (not in this else if branch)
     else if (k < n)
     {
-        if (k < t->len) // cut or not to cut?
-            split(t, k);
+        // if the node is larger, split it
+        // -- this applies to example 1, where "ABCDE-null" would be split into "ABC|DE-null".
+        // -- this also applies to example 2, where "ABC-null" would actually be split into "ABC|null"
+        // -- however in case of example 3, the current node size is actually equal to the prefix, so no split
+        if (k < t->len) split(t, k);
+
+        // at this point, we insert what remains after the prefix (aka the "F")
         t->link = insert(t->link, x + k, n - k);
+
+        // for example 1, this gives us "ABC-DE-null" and "ABC-F-null" as two new children, but no "ABC-null"
+        // for example 2, this gives us "ABC-null" and "ABC-F-null" as the two children.
+        // for example 3, we only get "ABCF-null"
     }
+
+    // otherwise, the node to be added is the current node itself (k != 0 and >= n), so just return it! (example 4)
     return t;
 }
 
-void RadixTree::join(Node* t) // t and t->link nodes merge
+void RadixTree::join(Node* t)
 {
-    Node* p = t->link;
+    // Let's use the following example to explain this function:
+
+    // Join the following node (with its link): [parent ---- "ABCD" ---- "EF null" ---- child]
+    // Required Result:                         [parent ---- "ABCDEF null" ---- child]
+
+    // Point towards the link node of the current node
+    Node* p = t->link; // In our example, this means: p = "EF null"
+
+    // Create a temporary array to store the current node as well as the link node's characters
     char* a = new char[t->len + p->len];
-    //strncpy(a, t->key, t->len);
-    for (int i = 0; i < t->len; i++) a[i] = t->key[i];
 
+    // Copy the contents of the current node into the temporary array
+    for (int i = 0; i < t->len; i++) a[i] = t->key[i]; // a = "ABCD"
 
-    //strncpy(a + t->len, p->key, p->len);
-    for (int i = 0; i < p->len; i++) (a + t->len)[i] = p->key[i];
+    // Copy the contents of the link node afterwards
+    for (int i = 0; i < p->len; i++) a[t->len + i] = p->key[i]; // a = "ABCDEF null"
 
+    // Delete the current key and replace it with the temporary character array just created
     delete[] t->key;
     t->key = a;
+
+    // Increase its size by the size of the link node
     t->len += p->len;
-    t->link = p->link;
+
+    // Set the link of the current node as the link of its own link node (i.e. skipping it)
+    t->link = p->link; // In our example, this means: t = "ABCDEF null" ---- child
+
+    // Finally, delete the now-duplicated node
     delete p;
 }
 
-RadixTree::Node* RadixTree::remove(Node* t, char* x, int n) // deleting x key from t tree 
+RadixTree::Node* RadixTree::remove(Node* t, char* x, int n)
 {
+    // if n is uninitialized, its value is set as the size of "x" (INCLUDING null character, i.e. size of "abc" is 4)
+    // this is consistent with the expected value of the "len" member of each node: number of character, null included
     if (!n) while (x[n++]);
+
+    // if provided tree node "t" is null, then there is nothing to be removed
     if (!t) return 0;
+
+    // otherwise, if node has value, find the common prefix between it and the key being searched for, "x"
+    // the prefix function is provided the size of both character arrays INCLUDING the null character
     int k = prefix(x, n, t->key, t->len);
-    if (k == n) // deleting a leaf
+
+    // if all of "x" is prefix, this means the current node IS "x" itself, so remove it (by replacing it with its next)
+    if (k == n)
     {
         Node* p = t->next;
         delete t;
         return p;
     }
+
+    // if there's nothing in common, repeat the process for the next node in this tree level
     if (k == 0) t->next = remove(t->next, x, n);
+
+    // otherwise if the current node is a prefix itself... for example...
+    // key: ABCDE-null
+    // current node: ABC
+
+    // then: k = 3, t->len = 3, n = 6
     else if (k == t->len)
     {
+        // proceed to the link(s) of this node with the rest of the key (in this case, DE-null), attempting to remove again
+        // let's say the link was "DE-null". If we go upwards, we find that this is the (k == n) case, where the link gets...
+        // ...replaced by the link after it (connected to it by "next").
         t->link = remove(t->link, x + k, n - k);
-        if (t->link && !t->link->next) // does t node have just one sister node?
-            join(t);
+
+        // accordingly, if "t" ends up with only one link (which we can find by seeing if its link has a next or not)...
+        // ...merge it with that link so as to make it one node.
+        if (t->link && !t->link->next) join(t);
     }
+
+    // otherwise, the node to be removed was not found, so return this node as it is (i.e. no changes)
     return t;
 }
 

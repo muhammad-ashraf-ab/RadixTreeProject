@@ -26,7 +26,7 @@ int main() {
     // Instantiate tree
     RadixTree rt;
 
-    // Generate random DNA segments and add them to tree
+    // Generate random DNA segments and add them to the tree
     for (int i = 0; i < 10; i++)
         rt.addString(generateTestSegment(10 + rand() % 90));
 
