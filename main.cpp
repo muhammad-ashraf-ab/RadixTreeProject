@@ -15,7 +15,7 @@ char* generateTestSegment(const int len) {
     // Set null terminator
     testSegment[len] = 0;
 
-    cout << "*** DEBUG INFO | Generated Test Segment: " << testSegment << endl;
+    cout << "*** DEBUG INFO | Generated DNA segment of length " << len << ": " << testSegment << endl;
     return testSegment;
 }
 
@@ -23,13 +23,12 @@ int main() {
     // Initialize randomization seed
     srand(time(0));
 
+    // Instantiate tree
     RadixTree rt;
-    cout << "Hello, World!" << endl;
 
-    rt.addString(generateTestSegment(40));
-    rt.addString(generateTestSegment(40));
-    rt.addString(generateTestSegment(40));
-    rt.addString(generateTestSegment(40));
+    // Generate random DNA segments and add them to tree
+    for (int i = 0; i < 10; i++)
+        rt.addString(generateTestSegment(10 + rand() % 90));
 
     system("pause");
     return 0;
