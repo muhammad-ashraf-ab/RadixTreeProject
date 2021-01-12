@@ -32,6 +32,7 @@ private:
     Node* remove(Node* t, char* x, int n = 0);
 
 public:
+    RadixTree(): root(0) {};
     void addString(char* str);
     void deleteString(char* str);
     bool searchString(char* str);
