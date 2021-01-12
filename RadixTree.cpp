@@ -12,7 +12,7 @@ int RadixTree::prefix(char* x, int n, char* key, int m)
     return n;
 }
 
-RadixTree::Node* RadixTree::find(Node* t, char* x, int n = 0) // x key search in t tree 
+RadixTree::Node* RadixTree::find(Node* t, char* x, int n) // x key search in t tree 
 {
     if (!n) n = strlen(x) + 1;
     if (!t) return 0;
@@ -35,7 +35,7 @@ void RadixTree::split(Node* t, int k) // dividing t node according to k key symb
     t->len = k;
 }
 
-RadixTree::Node* RadixTree::insert(Node* t, char* x, int n = 0) // inserting x key in t tree 
+RadixTree::Node* RadixTree::insert(Node* t, char* x, int n) // inserting x key in t tree 
 {
     if (!n) n = strlen(x) + 1;
     if (!t) return new Node(x, n);
@@ -63,7 +63,7 @@ void RadixTree::join(Node* t) // t and t->link nodes merge
     delete p;
 }
 
-RadixTree::Node* RadixTree::remove(Node* t, char* x, int n = 0) // deleting x key from t tree 
+RadixTree::Node* RadixTree::remove(Node* t, char* x, int n) // deleting x key from t tree 
 {
     if (!n) n = strlen(x) + 1;
     if (!t) return 0;
