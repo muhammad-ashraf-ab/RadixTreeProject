@@ -4,4 +4,4 @@
 /out/
 /.vscode
 /bin
-/CMakeLists.txt
+CMakeLists.txt
