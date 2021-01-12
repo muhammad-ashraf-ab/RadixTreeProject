@@ -3,5 +3,5 @@
 /.vs/
 /out/
 /.vscode
-/main.exe
-RadixTree.exe
+/bin
+/CMakeLists.txt
