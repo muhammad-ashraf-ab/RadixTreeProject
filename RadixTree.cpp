@@ -17,9 +17,9 @@ RadixTree::Node* RadixTree::find(Node* t, char* x, int n = 0) // x key search in
     if (!n) n = strlen(x) + 1;
     if (!t) return 0;
     int k = prefix(x, n, t->key, t->len);
-    if (k == 0) return find(t->next, x, n); // let’s look for the child’s node 
+    if (k == 0) return find(t->next, x, n); // let's look for the child's node 
     if (k == n) return t;
-    if (k == t->len) return find(t->link, x + k, n - k); // let’s look for at the child’s node 
+    if (k == t->len) return find(t->link, x + k, n - k); // let's look for at the child's node 
     return 0;
 }
 

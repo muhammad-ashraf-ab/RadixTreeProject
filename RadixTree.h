@@ -9,12 +9,12 @@
 
 class RadixTree {
 private:
-    class Node{
+    class Node {
     public:
         char* key;
         int len;
-        Node * link;
-        Node * next;
+        Node* link;
+        Node* next;
         Node(char* x, int n) : len(n), link(0), next(0)
         {
             key = new char[n];
@@ -30,10 +30,11 @@ private:
     Node* insert(Node* t, char* x, int n = 0);
     void join(Node* t);
     Node* remove(Node* t, char* x, int n = 0);
+
 public:
-    void addString(char * str);
-    void deleteString(char * str);
-    bool searchString(char * str);
+    void addString(char* str);
+    void deleteString(char* str);
+    bool searchString(char* str);
 
 };
 
