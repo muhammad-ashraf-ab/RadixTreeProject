@@ -198,6 +198,15 @@ RadixTree::Node* RadixTree::remove(Node* t, char* x, int n)
     return t;
 }
 
+int RadixTree::countStringsAux(Node* t) {
+    if (!t) return 0; // if provided tree node "t" is null, then there is no strings in it
+
+    return (!t->link) //if it has no children, then it is the end of a string so add 1
+        + countStringsAux(t->next) //visit all its siblings 
+        + countStringsAux(t->link) //visit all its siblings children
+        ;
+}
+
 // Addition function updates root with a new root containing the string to be added
 void RadixTree::addString(char* str) {
     root = insert(root, str);
@@ -211,4 +220,9 @@ void RadixTree::deleteString(char* str) {
 // Searching function returns boolean value based on the result of the finder function
 bool RadixTree::searchString(char* str) {
     return find(root, str) != 0;
+}
+
+// Counting strings function returns the total number of string in the current Radix Tree
+int RadixTree::countStrings() {
+    return countStringsAux(root);
 }

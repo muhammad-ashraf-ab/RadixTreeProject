@@ -84,6 +84,11 @@ private:
     // Returns pointer to the node that takes place of removed node
     // --------------------------------------------------------------------------------
 
+    // --------------------------------------------------------------------------------
+    // counting function, responsible for counting strings in tree of root node "t"
+    int countStringsAux(Node* t);
+    // --------------------------------------------------------------------------------
+
 public:
 
     // Basic constructor, initializes root node to NULL
@@ -93,6 +98,7 @@ public:
     void addString(char* str);
     void deleteString(char* str);
     bool searchString(char* str);
+    int countStrings();
 
 };
 
