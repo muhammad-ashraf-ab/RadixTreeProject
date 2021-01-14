@@ -203,7 +203,16 @@ int RadixTree::countStringsAux(Node* t) {
 
     return (!t->link) //if it has no children, then it is the end of a string so add 1
         + countStringsAux(t->next) //visit all its siblings 
-        + countStringsAux(t->link) //visit all its siblings children
+        + countStringsAux(t->link) //visit all its children
+        ;
+}
+
+int RadixTree::countNodesAux(Node* t) {
+    if (!t) return 0; // if provided tree node "t" is null, then there is no Nodes in it
+
+    return 1 // Always add 1. Doesn't matter if it's a leaf node or not
+        + countNodesAux(t->next) //visit all its siblings 
+        + countNodesAux(t->link) //visit all its children 
         ;
 }
 
@@ -226,3 +235,9 @@ bool RadixTree::searchString(char* str) {
 int RadixTree::countStrings() {
     return countStringsAux(root);
 }
+
+// Counting nodes function returns the total number of nodes in the current Radix Tree
+int RadixTree::countNodes() {
+    return countNodesAux(root);
+}
+

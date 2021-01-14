@@ -85,8 +85,13 @@ private:
     // --------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------
-    // counting function, responsible for counting strings in tree of root node "t"
+    // counting strings function, responsible for counting strings in tree of root node "t"
     int countStringsAux(Node* t);
+    // --------------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------------
+    // counting nodes function, responsible for counting nodes in tree of root node "t"
+    int countNodesAux(Node* t);
     // --------------------------------------------------------------------------------
 
 public:
@@ -94,11 +99,12 @@ public:
     // Basic constructor, initializes root node to NULL
     RadixTree() : root(0) {};
 
-    // Auxiliary public functions, names self-explanatory.
+    // public functions, names self-explanatory.
     void addString(char* str);
     void deleteString(char* str);
     bool searchString(char* str);
     int countStrings();
+    int countNodes();
 
 };
 
