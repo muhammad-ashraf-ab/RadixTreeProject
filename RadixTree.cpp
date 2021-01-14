@@ -1,7 +1,4 @@
-//
-// Created by Ahmed Bakry on 1/11/2021.
-//
-#include <iostream>
+#include <fstream>
 #include "RadixTree.h"
 using namespace std;
 
@@ -245,17 +242,17 @@ int RadixTree::countNodes() {
 
 void RadixTree::printNodeAndPrefix(Node * n, char * prefix, int prefixlen)
 {
-	if (n->key[0] == 0) { cout << "NULL"; }
+	if (n->key[0] == 0) { nodeCountFile << "NULL"; }
 	for (int i = 0; i < n->len; i++)
 	{
-		cout << n->key[i];
+		nodeCountFile << n->key[i];
 	}
-	cout << ", Prefix: ";
+	nodeCountFile << ", Prefix: ";
 	for (int i = 0; i < prefixlen; i++)
 	{
-		cout << prefix[i];
+		nodeCountFile << prefix[i];
 	}
-	cout << endl;
+	nodeCountFile << endl;
 	
 }
 void RadixTree::printNodesAUX(Node * current)
@@ -264,7 +261,7 @@ void RadixTree::printNodesAUX(Node * current)
 	static char * prefix = new char[99999];
 	static int prefixlen = 0;
 	if (current != NULL) {
-		cout << "Node #" << i << ' ';
+		nodeCountFile << "Node #" << i << ' ';
 		printNodeAndPrefix(current, prefix, prefixlen);
 		for (int i = 0; i < current->len; i++)
 		{
@@ -278,22 +275,25 @@ void RadixTree::printNodesAUX(Node * current)
 	}
 
 }
-void RadixTree::printNodes() {
-	return printNodesAUX(root);
+void RadixTree::printNodes(char *address) {
+    nodeCountFile.open(address);
+    nodeCountFile << "Node count:" << countNodes() << endl;
+	printNodesAUX(root);
+	nodeCountFile.close();
 }
 
 void RadixTree::printTreeAUX(const string& prefix, const RadixTree::Node *node) {
     if (node != 0){
-        cout << prefix;
-        cout << ((node->next != 0) ? "├──" : "└──");
+        treeFile << prefix;
+        treeFile << ((node->next != 0) ? "├──" : "└──");
         for (int i = 0; i < node->len; i++) {
             if (node->key[0] == 0){
-                cout << "(NULL)";
+                treeFile << "(NULL)";
                 break;
             }
-                cout << node->key[i];
+                treeFile << node->key[i];
         }
-        cout << endl;
+        treeFile << endl;
 //        for (int i = 0; i < 5; i++) {
 //            size++;
 //            prefix[size + i] = ((node->next != 0) ? "│   " : "    ");
@@ -303,8 +303,9 @@ void RadixTree::printTreeAUX(const string& prefix, const RadixTree::Node *node) 
     }
 }
 
-void RadixTree::printTree() {
+void RadixTree::printTree(char *address) {
+    treeFile.open(address);
 //    char *prefix = new char[99999];
     printTreeAUX( "", root);
-
+    treeFile.close();
 }
