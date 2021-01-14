@@ -1,7 +1,8 @@
 //
 // Created by Ahmed Bakry on 1/11/2021.
 //
-
+#include <string>
+using namespace std;
 #ifndef RADIXTREEPROJECT_RADIXTREE_H
 #define RADIXTREEPROJECT_RADIXTREE_H
 
@@ -47,6 +48,8 @@ private:
     // Radix Tree's root node
     Node* root;
 
+
+//    char *printNodeBar = "│   ";
     // --------------------------------------------------------------------------------
     // Prefix function, responsible for comparing two character arrays "x" and "key",
     // of lengths "n" and "m" respectively.
@@ -102,6 +105,9 @@ private:
 	// --------------------------------------------------------------------------------
 	void printNodesAUX(Node * current);
 
+    // --------------------------------------------------------------------------------
+    void printTreeAUX(const string& prefix, const Node *node);
+
 public:
 
     // Basic constructor, initializes root node to NULL
@@ -114,6 +120,7 @@ public:
     int countStrings();
     int countNodes();
 	void printNodes();
+	void printTree();
 };
 
 #endif //RADIXTREEPROJECT_RADIXTREE_H

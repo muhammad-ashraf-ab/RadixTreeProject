@@ -250,12 +250,12 @@ void RadixTree::printNodeAndPrefix(Node * n, char * prefix, int prefixlen)
 	{
 		cout << n->key[i];
 	}
-	cout << endl << "prefix: ";
+	cout << ", Prefix: ";
 	for (int i = 0; i < prefixlen; i++)
 	{
 		cout << prefix[i];
 	}
-	cout << endl<< endl;
+	cout << endl;
 	
 }
 void RadixTree::printNodesAUX(Node * current)
@@ -264,7 +264,7 @@ void RadixTree::printNodesAUX(Node * current)
 	static char * prefix = new char[99999];
 	static int prefixlen = 0;
 	if (current != NULL) {
-		cout << "node #" << i << endl;
+		cout << "Node #" << i << ' ';
 		printNodeAndPrefix(current, prefix, prefixlen);
 		for (int i = 0; i < current->len; i++)
 		{
@@ -282,3 +282,29 @@ void RadixTree::printNodes() {
 	return printNodesAUX(root);
 }
 
+void RadixTree::printTreeAUX(const string& prefix, const RadixTree::Node *node) {
+    if (node != 0){
+        cout << prefix;
+        cout << ((node->next != 0) ? "├──" : "└──");
+        for (int i = 0; i < node->len; i++) {
+            if (node->key[0] == 0){
+                cout << "(NULL)";
+                break;
+            }
+                cout << node->key[i];
+        }
+        cout << endl;
+//        for (int i = 0; i < 5; i++) {
+//            size++;
+//            prefix[size + i] = ((node->next != 0) ? "│   " : "    ");
+//        }
+        printTreeAUX(prefix + ((node->next != 0) ? "│  " : "   "), node->link);
+        printTreeAUX(prefix + ((node->next != 0) ? "" : "   "), node->next);
+    }
+}
+
+void RadixTree::printTree() {
+//    char *prefix = new char[99999];
+    printTreeAUX( "", root);
+
+}

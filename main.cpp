@@ -25,12 +25,20 @@ int main() {
 
     // Instantiate tree
     RadixTree rt;
+//    cout << rt.searchString("Hello") << endl;
+//    rt.addString("Hello");
+//    cout << rt.searchString("Hello") << endl;
+//    rt.deleteString("Hell");
+//    cout << rt.searchString("Hell") << ' ' << rt.searchString("o") << endl;
+//    cout << "Hello, World!" << endl;
 
     // Generate random DNA segments and add them to the tree
-    for (int i = 0; i < 5; i++)
-        rt.addString(generateTestSegment(2 + rand() % 5));
-	cout << endl << "node count:" << rt.countNodes() << endl;
+    for (int i = 0; i < 1000; i++)
+        rt.addString(generateTestSegment(10 + rand() % 90));
+	cout << endl << "Node count:" << rt.countNodes() << endl;
 	rt.printNodes();
-    system("pause");
+	cout << endl;
+	rt.printTree();
+//    system("pause");
     return 0;
 }
