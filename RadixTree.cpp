@@ -1,8 +1,9 @@
 //
 // Created by Ahmed Bakry on 1/11/2021.
 //
-
+#include <iostream>
 #include "RadixTree.h"
+using namespace std;
 
 int RadixTree::prefix(char* x, int n, char* key, int m)
 {
@@ -239,5 +240,45 @@ int RadixTree::countStrings() {
 // Counting nodes function returns the total number of nodes in the current Radix Tree
 int RadixTree::countNodes() {
     return countNodesAux(root);
+}
+
+
+void RadixTree::printNodeAndPrefix(Node * n, char * prefix, int prefixlen)
+{
+	if (n->key[0] == 0) { cout << "NULL"; }
+	for (int i = 0; i < n->len; i++)
+	{
+		cout << n->key[i];
+	}
+	cout << endl << "prefix: ";
+	for (int i = 0; i < prefixlen; i++)
+	{
+		cout << prefix[i];
+	}
+	cout << endl<< endl;
+	
+}
+void RadixTree::printNodesAUX(Node * current)
+{
+	static int i = 0;
+	static char * prefix = new char[99999];
+	static int prefixlen = 0;
+	if (current != NULL) {
+		cout << "node #" << i << endl;
+		printNodeAndPrefix(current, prefix, prefixlen);
+		for (int i = 0; i < current->len; i++)
+		{
+			prefix[prefixlen + i] = current->key[i];
+		}
+		prefixlen += current->len;
+		i++;
+		printNodesAUX(current->link);
+		prefixlen -= current->len;
+		printNodesAUX(current->next);
+	}
+
+}
+void RadixTree::printNodes() {
+	return printNodesAUX(root);
 }
 

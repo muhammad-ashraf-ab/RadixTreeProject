@@ -94,6 +94,14 @@ private:
     int countNodesAux(Node* t);
     // --------------------------------------------------------------------------------
 
+	// --------------------------------------------------------------------------------
+	//prints a single node
+	void printNodeAndPrefix(Node * n, char * prefix , int prefixlen);
+	// --------------------------------------------------------------------------------
+
+	// --------------------------------------------------------------------------------
+	void printNodesAUX(Node * current);
+
 public:
 
     // Basic constructor, initializes root node to NULL
@@ -105,7 +113,7 @@ public:
     bool searchString(char* str);
     int countStrings();
     int countNodes();
-
+	void printNodes();
 };
 
 #endif //RADIXTREEPROJECT_RADIXTREE_H

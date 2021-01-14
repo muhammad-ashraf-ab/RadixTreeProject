@@ -27,9 +27,10 @@ int main() {
     RadixTree rt;
 
     // Generate random DNA segments and add them to the tree
-    for (int i = 0; i < 10; i++)
-        rt.addString(generateTestSegment(10 + rand() % 90));
-
+    for (int i = 0; i < 5; i++)
+        rt.addString(generateTestSegment(2 + rand() % 5));
+	cout << endl << "node count:" << rt.countNodes() << endl;
+	rt.printNodes();
     system("pause");
     return 0;
 }
