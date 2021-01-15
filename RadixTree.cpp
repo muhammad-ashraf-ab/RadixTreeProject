@@ -239,7 +239,6 @@ int RadixTree::countNodes() {
     return countNodesAux(root);
 }
 
-
 void RadixTree::printNodeAndPrefix(Node* n, char* p, int pLen)
 {
     if (n->key[0] == 0) { nodeCountFile << "NULL"; }
@@ -255,6 +254,7 @@ void RadixTree::printNodeAndPrefix(Node* n, char* p, int pLen)
     nodeCountFile << endl;
 
 }
+
 void RadixTree::printNodesAux(Node* t)
 {
     static int i = 0;
@@ -275,6 +275,7 @@ void RadixTree::printNodesAux(Node* t)
     }
 
 }
+
 void RadixTree::sortNodes(Node** arr, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = i + 1; j < size; j++)
@@ -288,6 +289,7 @@ void RadixTree::sortNodes(Node** arr, int size) {
         }
     }
 }
+
 void RadixTree::printStringsAux(Node* t, char* p, int pLen) {
     if (!t) return;
     int itr = 0;
@@ -331,12 +333,14 @@ void RadixTree::printStringsAux(Node* t, char* p, int pLen) {
         }
     }
 }
+
 void RadixTree::printString(const char* address)
 {
     generatedDNAFile.open(address);
     printStringsAux(root, 0, 0);
     generatedDNAFile.close();
 }
+
 void RadixTree::printNodes(const char* address) {
     nodeCountFile.open(address);
     nodeCountFile << "Node count:" << countNodes() << endl;

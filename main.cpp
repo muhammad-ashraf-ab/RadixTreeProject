@@ -3,7 +3,6 @@
 #include "RadixTree.h"
 using namespace std;
 
-
 char* generateTestSegment(const int len, bool echo) {
 
     // Define the array of DNA letters
