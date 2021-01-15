@@ -310,43 +310,87 @@ void RadixTree::printTreeAux(char* p, const RadixTree::Node* node, int pLen, boo
     }
 }
 
-void RadixTree::sortNodes(Node** arr, int size) {
-    for (int i = 0; i < size; i++) {
-        for (int j = i + 1; j < size; j++)
-        {
-            if (arr[i]->key[0] > arr[j]->key[0])
-            {
-                Node* temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-            }
-        }
+void RadixTree::heapifyNodes(Node** arr, int n, int i)
+{
+    int largest = i; // Initialize largest as root
+    int l = 2 * i + 1; // left = 2*i + 1
+    int r = 2 * i + 2; // right = 2*i + 2
+
+    // If left child is larger than root
+    if (l < n && arr[l]->key[0] > arr[largest]->key[0])
+        largest = l;
+
+    // If right child is larger than largest so far
+    if (r < n && arr[r]->key[0] > arr[largest]->key[0])
+        largest = r;
+
+    // If largest is not root
+    if (largest != i) {
+        swap(arr[i]->key[0], arr[largest]->key[0]);
+
+        // Recursively heapify the affected sub-tree
+        heapifyNodes(arr, n, largest);
     }
 }
 
+void RadixTree::heapSortNodes(Node** arr, int size)
+{
+    // Build heap (rearrange array)
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapifyNodes(arr, n, i);
+
+    // One by one extract an element from heap
+    for (int i = n - 1; i > 0; i--) {
+        // Move current root to end
+        Node* temp = arr[i];
+        arr[i] = arr[0];
+        arr[0] = temp;
+
+        // call max heapify on the reduced heap
+        heapifyNodes(arr, i, 0);
+    }
+}
+
+
 void RadixTree::printStringsAux(Node* t, char* p, int pLen, bool echo) {
-    if (!t) return;
-    int itr = 0;
-    Node** arr = new Node * [60];
+
+    if (!t) return; // if provided tree node "t" is null, then there is nothing to do.
+
+    int itr = 0;  // iterator to loop over all siblings of the current node.
+    // Array of nodes to hold all nodes in the current level.
+    // Size equal the number of characters in ASCII table.
+
+    Node** arr = new Node * [128]; 
     Node* temp = t;
+
+    // Store all siblings in the array.
     while (temp != 0)
     {
         arr[itr] = temp;
         temp = temp->next;
         itr++;
     }
-    sortNodes(arr, itr);
+
+    // Sort using heap sort algorithm.
+    heapSortNodes(arr, itr);
     Node* n;
+
+    // Looping over the sorted array of nodes
     for (int i = 0; i < itr; i++)
     {
         n = arr[i];
-        if (!n->link)
+
+        // If the node has no children, print it.
+        if (!n->link) 
         {
+            // Printing the prefix of the node
             for (int i = 0; i < pLen; i++)
             {
                 segmentsFile << p[i];
                 if (echo) cout << p[i];
             }
+
+            // Printing the the node itself
             for (int i = 0; i < n->len; i++)
             {
                 segmentsFile << n->key[i];
@@ -357,15 +401,22 @@ void RadixTree::printStringsAux(Node* t, char* p, int pLen, bool echo) {
         }
         else
         {
+            // If the node has children, create a new prefix that contains the previous prefix and the current node.
             char* newPrev = new char[n->len + pLen];
+
+            // Inserting the characters of the node's prefix.
             for (int i = 0; i < pLen; i++)
             {
                 newPrev[i] = p[i];
             }
+
+            // Inserting the characters of the node itself.
             for (int i = 0; i < n->len; i++)
             {
                 newPrev[i + pLen] = n->key[i];
             }
+
+            // Visit current node's children and pass the newly created prefix.
             printStringsAux(n->link, newPrev, n->len + pLen, echo);
         }
     }
