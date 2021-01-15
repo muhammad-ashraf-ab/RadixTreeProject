@@ -1,3 +1,10 @@
+//----------------------------------------------------------------------------------------------------------------------
+// This project was created for CSE_331 Data Structures And Algorithms course offered in
+// Ain Shams University - Faculty of Engineering under the supervision of Dr. Ashraf Abdel Raouf
+//
+// This implementation has been greatly influenced by the implementation found in the following source:
+// https://kukuruku.co/post/radix-trees/
+//----------------------------------------------------------------------------------------------------------------------
 #ifndef RADIXTREEPROJECT_RADIXTREE_H
 #define RADIXTREEPROJECT_RADIXTREE_H
 #include <fstream>
@@ -123,7 +130,24 @@ private:
     // ----------------------------------------------------------------------------------------
     // Tree printing function, responsible for visualizing the entire tree of root node "t"
     // Has the option to echo output to console - false by default
+    // Function outputs into the Trees.txt file. The tree is generated horizontally and the function works recursively.
     //
+    // The function takes four parameters:
+    // 1- The char array p is responsible for printing white spaces and branches in the tree structure
+    // 2- The Node node is the current node to be traversed
+    // 3- The int pLen is the length of p. It is used for loops responsible for printing out contents of p
+    // 4- The bool echo is used in the conditional for printing out to console
+    //
+    // An example of the final output of the function could be similar to the following:
+    // ├───T
+    // │   ├───TGGTTGA
+    // │   ├───CTT
+    // │   └───GCCCC
+    // ├───A
+    // │   ├───TCGCGAAG
+    // │   └───GA
+    // ├───CACTAA
+    // └───GTACTA
     void printTreeAux(char* p, const Node* t, int pLen, bool echo = false);
     // ----------------------------------------------------------------------------------------
 

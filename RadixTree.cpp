@@ -1,3 +1,10 @@
+//----------------------------------------------------------------------------------------------------------------------
+// This project was created for CSE_331 Data Structures And Algorithms course offered in
+// Ain Shams University - Faculty of Engineering under the supervision of Dr. Ashraf Abdel Raouf
+//
+// This implementation has been greatly influenced by the implementation found in the following source:
+// https://kukuruku.co/post/radix-trees/
+//----------------------------------------------------------------------------------------------------------------------
 #include <iostream>
 using namespace std;
 
@@ -265,48 +272,101 @@ void RadixTree::printNodesAux(Node* t, bool echo)
 }
 
 void RadixTree::printTreeAux(char* p, const RadixTree::Node* node, int pLen, bool echo) {
-    if (node != 0) {
 
+    // Check if the current node is null as the base condition. If it is, do nothing and start popping stack.
+    if (node != 0) {
+        // This loop is responsible for printing out the contents of p. It always starts printing its content
+        // prior to other operations; hence why p is also referred to as The Prefix
         for (int i = 0; i < pLen; i++)
         {
+            // Prints to the tree file
             treeFile << p[i];
+
+            // Prints to the console, given echo is true
             if (echo) cout << p[i];
         }
 
+        // This line prints a special set of characters that represent whether the node has next siblings or it is the
+        // last sibling. It should be noted, however, that the special characters sometimes do not appear as intended
+        // in Windows console. If this happens, the specialized console of some IDEs is recommended for better
+        // visualization. Otherwise, the text file should provide better visualization, given right encoding.
+        //
+        // Example of the different evaluations for the conditions:
+        // ...
+        // ├───TGGTTGA
+        // ├───CTT
+        // └───GCCCC
         treeFile << ((node->next != 0) ? "├───" : "└───");
+
+        // Prints to the console, given echo is true
         if (echo) cout << ((node->next != 0) ? "├───" : "└───");
 
+        // Loop responsible for printing out the keys of a node.
         for (int i = 0; i < node->len; i++) {
+            // Checks if the key for the node is null. If it is, prints (NULL) to prevent empty tree branches.
             if (node->key[0] == 0) {
+                // Prints to the tree file
                 treeFile << "(NULL)";
+
+                // Prints to the console, given echo is true
                 if (echo) cout << "(NULL)";
+
+                // Breaks outside the loop to prevent printing gibberish
                 break;
             }
+
+            // Prints the content of the node, including the final null character if it exists, given first was not null
             treeFile << node->key[i];
+
+            // Prints to the console, given echo is true
             if (echo) cout << node->key[i];
         }
 
+        // Prints a new line
         treeFile << endl;
         if (echo) cout << endl;
 
-        if (node->next != 0)
-            for (int i = 0; i < 4; i++)
-                p[pLen + i] = (i ? ' ' : '|');
-        else
-            for (int i = 0; i < 4; i++)
-                p[pLen + i] = ' ';
+        // This part is responsible for appending the special character set "│   " to branches of the tree.
+        // Otherwise, it only prints four white spaces like "   ".
+        //
+        // It should also be noted that the ASCII character 124 (|) was used here due to limitations of char type.
+        // The ASCII character 179 (│) can be used instead if this code is implemented using strings for a better tree.
+        //
+        //
+        // Example of the final output:
+        // 1- In case of adding a bar:
+        // ...
+        // ├───T
+        // │   ├───CTT
+        // ...
+        //
+        // 2- In case of adding a space:
+        // ...
+        // │       │       └───A
+        // │       └───G
+        // ...
+        for (int i = 0; i < 4; i++)
+            p[pLen + i] = (node->next != 0 ? (i ? ' ' : '|') : ' ');
 
+        // Make a recursive call to the function to traverse on to the next link using the new content of p.
+        // It should be noted that the size is sent as pLen + 4 to keep the original content of p after returning.
         printTreeAux(p, node->link, pLen + 4, echo);
 
+        // After reaching the final link, check if the node has any next siblings.
+        // If it does not, it appends four white spaces "    ". It then increments pLen by 4 to represent that change.
         if (node->next == 0) {
-
+            // Simple loop for appending white spaces
             for (int i = 0; i < 4; i++)
                 p[pLen + i] = ' ';
 
+            // Increments pLen by 4 to represent that appending of the white spaces.
             pLen += 4;
         }
 
+        // Make a recursive call to next sibling of the node to keep iterating through them.
         printTreeAux(p, node->next, pLen, echo);
+
+        // An example of the final output of the function can be found in the function declaration in RadixTree.h
     }
 }
 
@@ -336,11 +396,11 @@ void RadixTree::heapifyNodes(Node** arr, int n, int i)
 void RadixTree::heapSortNodes(Node** arr, int size)
 {
     // Build heap (rearrange array)
-    for (int i = n / 2 - 1; i >= 0; i--)
-        heapifyNodes(arr, n, i);
+    for (int i = size / 2 - 1; i >= 0; i--)
+        heapifyNodes(arr, size, i);
 
     // One by one extract an element from heap
-    for (int i = n - 1; i > 0; i--) {
+    for (int i = size - 1; i > 0; i--) {
         // Move current root to end
         Node* temp = arr[i];
         arr[i] = arr[0];
