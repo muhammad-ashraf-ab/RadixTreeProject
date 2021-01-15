@@ -5,3 +5,11 @@
 /.vscode
 /bin
 CMakeLists.txt
+main.cpp
+.gitignore
+Tree.txt
+Node_Count2.txt
+Node_Count.txt
+DNA_Test2.txt
+Tree2.txt
+DNA_Test.txt

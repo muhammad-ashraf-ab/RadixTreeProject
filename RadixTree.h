@@ -45,7 +45,7 @@ private:
     Node* root;
 
     //File streams to print to right files
-	ofstream generatedDNAFile;
+    ofstream generatedDNAFile;
     ofstream nodeCountFile;
     ofstream treeFile;
 
@@ -55,8 +55,8 @@ private:
     int prefix(char* x, int n, char* key, int m);
     // Returns the number of common prefix characters
     // --------------------------------------------------------------------------------
-	void sortNodes(Node** arr, int size);
-	void printStringsAUX(Node* t, char* prev, int prevlen);
+    void sortNodes(Node** arr, int size);
+    void printStringsAUX(Node* t, char* prev, int prevlen);
     // --------------------------------------------------------------------------------
     // Finder function, responsible for finding key "x" in tree of root node "t"
     Node* find(Node* t, char* x, int n = 0);
@@ -97,16 +97,16 @@ private:
     int countNodesAux(Node* t);
     // --------------------------------------------------------------------------------
 
-	// --------------------------------------------------------------------------------
-	//prints a single node
-	void printNodeAndPrefix(Node * n, char * prefix , int prefixlen);
-	// --------------------------------------------------------------------------------
-
-	// --------------------------------------------------------------------------------
-	void printNodesAUX(Node * current);
+    // --------------------------------------------------------------------------------
+    //prints a single node
+    void printNodeAndPrefix(Node* n, char* prefix, int prefixlen);
+    // --------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------
-    void printTreeAUX(char * prefix, const Node *node,int prefixLen = 0);
+    void printNodesAUX(Node* current);
+
+    // --------------------------------------------------------------------------------
+    void printTreeAUX(char* prefix, const Node* node, int prefixLen = 0);
 
 public:
 
@@ -119,9 +119,9 @@ public:
     bool searchString(char* str);
     int countStrings();
     int countNodes();
-	void printNodes(const char *address);
-	void printTree(const char *address);
-	void printString(const char *address);
+    void printNodes(const char* address);
+    void printTree(const char* address);
+    void printString(const char* address);
 };
 
 #endif //RADIXTREEPROJECT_RADIXTREE_H
