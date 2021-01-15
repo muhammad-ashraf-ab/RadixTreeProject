@@ -217,46 +217,49 @@ int RadixTree::countNodesAux(Node* t) {
 
 void RadixTree::printNodeAndPrefix(Node* n, char* p, int pLen, bool echo)
 {
+	//First we check if this is an empty node (only contains null character to determine the end of a segment) and if so we print NULL 
     if (n->key[0] == 0) {
         nodesFile << "NULL";
         if (echo) cout << "NULL";
     }
-
+	//Printing the key of the node
     for (int i = 0; i < n->len; i++) {
         nodesFile << n->key[i];
         if (echo) cout << n->key[i];
     }
-
+	//More printing
     nodesFile << ", Prefix: ";
     if (echo) cout << ", Prefix: ";
-
+	//Printing the prefix of the node
     for (int i = 0; i < pLen; i++) {
         nodesFile << p[i];
         if (echo) cout << p[i];
     }
-
+	//Terminating the line
     nodesFile << endl;
     if (echo) cout << endl;
 }
 
 void RadixTree::printNodesAux(Node* t, bool echo)
 {
-    static int i = 0;
-    static char* prefix = new char[99999];
-    static int prefixlen = 0;
+    static int i = 0; //The number of nodes already visted
+    static char* prefix = new char[99999]; //Character array to contain the prefix
+    static int prefixlen = 0; //The length of prefix
+	//If the node doesnt exist terminate the function
     if (t != NULL) {
-        nodesFile << "Node #" << i << ' ';
-        if (echo) cout << "Node #" << i << ' ';
-        printNodeAndPrefix(t, prefix, prefixlen, echo);
+        nodesFile << "Node #" << i << ' '; //Printing for the output file
+        if (echo) cout << "Node #" << i << ' ';//Printing for the output in the terminal
+        printNodeAndPrefix(t, prefix, prefixlen, echo); //Printing the node and its prefix
+		//Adding the key of the current node t to the prefix array
         for (int i = 0; i < t->len; i++)
         {
             prefix[prefixlen + i] = t->key[i];
         }
-        prefixlen += t->len;
-        i++;
-        printNodesAux(t->link, echo);
-        prefixlen -= t->len;
-        printNodesAux(t->next, echo);
+        prefixlen += t->len;//Incrementing the prefix array
+        i++;//Incrementing the visted nodes counter
+        printNodesAux(t->link, echo); //Recersive call to visit all the decendents of this node
+        prefixlen -= t->len; //Removing the prefix of the current node t to transition to its siblings
+        printNodesAux(t->next, echo); //Recursive call to visit all the siblings of this node
     }
 
 }
