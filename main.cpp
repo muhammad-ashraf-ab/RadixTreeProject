@@ -1,9 +1,9 @@
 #include <ctime>
+#include<iostream>
 #include <fstream>
 #include "RadixTree.h"
 using namespace std;
 
-ofstream generatedDNAFile;
 
 char* generateTestSegment(const int len) {
 
@@ -17,7 +17,7 @@ char* generateTestSegment(const int len) {
     // Set null terminator
     testSegment[len] = 0;
 
-    generatedDNAFile << "*** DEBUG INFO | Generated DNA segment of length " << len << ": " << testSegment << endl;
+    cout<< "*** DEBUG INFO | Generated DNA segment of length " << len << ": " << testSegment << endl;
     return testSegment;
 }
 
@@ -26,22 +26,19 @@ int main() {
     srand(time(0));
 
     //Three files to generate outputs in. Replace "<Insert Address Here>" with your preferred address.
-    char *dnaFileAddress = "<Insert Address Here>\\DNA_Test.txt";
-    char *nodesFileAddress = "<Insert Address Here>\\Node_Count.txt";
-    char *treeFileAddress = "<Insert Address Here>\\Tree.txt";
+    const char *dnaFileAddress = "E:\\school\\structures bs\\data structures\\project\\inout\\DNA_Test.txt";
+    const char *nodesFileAddress = "E:\\school\\structures bs\\data structures\\project\\inout\\Node_Count.txt";
+    const char *treeFileAddress = "E:\\school\\structures bs\\data structures\\project\\inout\\Tree.txt";
 
     // Instantiate tree
     RadixTree rt;
 
     // Generate random DNA segments and add them to the tree. Prints output to DNA_Test.txt
-    generatedDNAFile.open(dnaFileAddress);
-    for (int i = 0; i < 1000; i++)
-        rt.addString(generateTestSegment(10 + rand() % 90));
-    generatedDNAFile.close();
-
+    for (int i = 0; i < 10; i++)
+        rt.addString(generateTestSegment(2 + rand() % 5));
     //Prints generated nodes and their prefixes to Node_Count.txt
 	rt.printNodes(nodesFileAddress);
-
+	rt.printString(dnaFileAddress);
 	//Prints generated tree structure to Tree.txt
 	rt.printTree(treeFileAddress);
     system("pause");

@@ -275,17 +275,82 @@ void RadixTree::printNodesAUX(Node * current)
 	}
 
 }
-void RadixTree::printNodes(char *address) {
+void RadixTree::sortNodes(Node** arr, int size) {
+	for (int i = 0; i < size; i++) {
+		for (int j = i + 1; j < size; j++)
+		{
+			if (arr[i]->key[0] > arr[j]->key[0])
+			{
+				Node* temp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = temp;
+			}
+		}
+	}
+}
+void RadixTree::printStringsAUX(Node* t, char* prev, int prevlen) {
+	if (!t) return;
+	int itr = 0;
+	Node** arr = new Node*[60];
+	Node* temp = t;
+	while (temp != 0)
+	{
+		arr[itr] = temp;
+		temp = temp->next;
+		itr++;
+	}
+	sortNodes(arr, itr);
+	Node* n;
+	for (int i = 0; i < itr; i++)
+	{
+		n = arr[i];
+		if (!n->link)
+		{
+			for (int i = 0; i < prevlen; i++)
+			{
+				generatedDNAFile << prev[i];
+			}
+			for (int i = 0; i < n->len; i++)
+			{
+				generatedDNAFile << n->key[i];
+			}
+			generatedDNAFile << endl;
+		}
+		else
+		{
+			char* newPrev = new char[n->len + prevlen];
+			for (int i = 0; i < prevlen; i++)
+			{
+				newPrev[i] = prev[i];
+			}
+			for (int i = 0; i < n->len; i++)
+			{
+				newPrev[i + prevlen] = n->key[i];
+			}
+			printStringsAUX(n->link, newPrev, n->len + prevlen);
+		}
+	}
+}
+void RadixTree::printString(const char *address)
+{
+	generatedDNAFile.open(address);
+	printStringsAUX(root, 0, 0);
+	generatedDNAFile.close();
+}
+void RadixTree::printNodes(const char *address) {
     nodeCountFile.open(address);
     nodeCountFile << "Node count:" << countNodes() << endl;
 	printNodesAUX(root);
 	nodeCountFile.close();
 }
 
-void RadixTree::printTreeAUX(const string& prefix, const RadixTree::Node *node) {
+void RadixTree::printTreeAUX(char *prefix, const RadixTree::Node *node,int prefixlen ) {
     if (node != 0){
-        treeFile << prefix;
-        treeFile << ((node->next != 0) ? "├──" : "└──");
+		for(int i = 0 ; i< prefixlen; i++)
+		{
+			treeFile << prefix[i];
+		}
+		treeFile << ((node->next != 0) ? "├──" : "└──");
         for (int i = 0; i < node->len; i++) {
             if (node->key[0] == 0){
                 treeFile << "(NULL)";
@@ -294,18 +359,39 @@ void RadixTree::printTreeAUX(const string& prefix, const RadixTree::Node *node) 
                 treeFile << node->key[i];
         }
         treeFile << endl;
-//        for (int i = 0; i < 5; i++) {
-//            size++;
-//            prefix[size + i] = ((node->next != 0) ? "│   " : "    ");
-//        }
-        printTreeAUX(prefix + ((node->next != 0) ? "│  " : "   "), node->link);
-        printTreeAUX(prefix + ((node->next != 0) ? "" : "   "), node->next);
+		if (node->next != 0) 
+		{
+			for(int i = 0 ; i < 4 ; i++)
+			{
+				prefix[i + prefixlen] = i ? ' ' : '│';
+			}
+			prefixlen += 4;
+		}
+		else
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				prefix[i + prefixlen] = ' ';
+			}
+			prefixlen += 4;
+		}
+        printTreeAUX(prefix, node->link,prefixlen);
+		if (node->next == 0)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				prefix[i + prefixlen] = ' ';
+			}
+			prefixlen += 4;
+		}
+        printTreeAUX(prefix, node->next,prefixlen);
     }
 }
 
-void RadixTree::printTree(char *address) {
+void RadixTree::printTree(const char *address) {
     treeFile.open(address);
-//    char *prefix = new char[99999];
-    printTreeAUX( "", root);
+    char *prefix = new char[999];
+	prefix[0] = '\0';
+    printTreeAUX(prefix, root);
     treeFile.close();
 }
