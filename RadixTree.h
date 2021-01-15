@@ -49,76 +49,92 @@ private:
     ofstream nodeCountFile;
     ofstream treeFile;
 
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
     // Prefix function, responsible for comparing two character arrays "x" and "key",
     // of lengths "n" and "m" respectively.
     int prefix(char* x, int n, char* key, int m);
     // Returns the number of common prefix characters
-    // --------------------------------------------------------------------------------
-    void sortNodes(Node** arr, int size);
-    void printStringsAUX(Node* t, char* prev, int prevlen);
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
+
+    // ----------------------------------------------------------------------------------------
     // Finder function, responsible for finding key "x" in tree of root node "t"
     Node* find(Node* t, char* x, int n = 0);
     // Returns pointer to the node corresponding to "x", if found
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
 
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
     // Splitting function, responsible for splitting a node into two at "k"
     // Used as part of the insertion process
     void split(Node* t, int k);
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
 
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
     // Insertion function, responsible for inserting a node in its right position
     Node* insert(Node* t, char* x, int n = 0);
     // Returns pointer to the inserted node
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
 
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
     // Joining function, responsible for joining a node with its link
     // Used as part of the removal process
     void join(Node* t);
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
 
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
     // Removal function, responsible for removing key "x" in tree of root node "t"
     Node* remove(Node* t, char* x, int n = 0);
     // Returns pointer to the node that takes place of removed node
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
 
-    // --------------------------------------------------------------------------------
-    // counting strings function, responsible for counting strings in tree of root node "t"
+    // ----------------------------------------------------------------------------------------
+    // String counting function, responsible for counting strings in tree of root node "t"
     int countStringsAux(Node* t);
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
 
-    // --------------------------------------------------------------------------------
-    // counting nodes function, responsible for counting nodes in tree of root node "t"
+    // ----------------------------------------------------------------------------------------
+    // Node counting function, responsible for counting nodes in tree of root node "t"
     int countNodesAux(Node* t);
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
 
-    // --------------------------------------------------------------------------------
-    //prints a single node
-    void printNodeAndPrefix(Node* n, char* prefix, int prefixlen);
-    // --------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
+    // Single node and prefix printing function, prints node "n" and its prefix "p"
+    void printNodeAndPrefix(Node* n, char* p, int pLen);
+    // ----------------------------------------------------------------------------------------
 
-    // --------------------------------------------------------------------------------
-    void printNodesAUX(Node* current);
+    // ----------------------------------------------------------------------------------------
+    // Node printing function, responsible for printing all nodes in tree of root node "t"
+    void printNodesAux(Node* t);
+    // ----------------------------------------------------------------------------------------
 
-    // --------------------------------------------------------------------------------
-    void printTreeAUX(char* prefix, const Node* node, int prefixLen = 0);
+    // ----------------------------------------------------------------------------------------
+    // Tree printing function, responsible for visualizing the entire tree of root node "t"
+    void printTreeAux(char* p, const Node* t, int pLen = 0);
+    // ----------------------------------------------------------------------------------------
+
+    // ----------------------------------------------------------------------------------------
+    // Node sorting function, responsible for sorting "arr" array of nodes of size "size"
+    void sortNodes(Node** arr, int size);
+    // ----------------------------------------------------------------------------------------
+
+    // ----------------------------------------------------------------------------------------
+    // Strings printing function, responsible for printing all strings in tree of root "t"
+    // The function uses the sortNodes function defined previously to sort them alphabetically
+    void printStringsAux(Node* t, char* p, int plen);
+    // ----------------------------------------------------------------------------------------
 
 public:
 
     // Basic constructor, initializes root node to NULL
     RadixTree() : root(0) {};
 
-    // public functions, names self-explanatory.
+    // Publicly usable functions, names self-explanatory
     void addString(char* str);
     void deleteString(char* str);
     bool searchString(char* str);
     int countStrings();
     int countNodes();
+
+    // Printing functions, take the address of the file to print to
     void printNodes(const char* address);
     void printTree(const char* address);
     void printString(const char* address);

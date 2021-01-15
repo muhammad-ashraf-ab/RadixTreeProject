@@ -1,6 +1,5 @@
-#include <ctime>
-#include<iostream>
 #include <fstream>
+#include <iostream>
 #include "RadixTree.h"
 using namespace std;
 
@@ -22,17 +21,18 @@ char* generateTestSegment(const int len, bool echo) {
 }
 
 int main() {
+
     // Initialize randomization seed
-    srand(time(0));
+    srand(1234);
 
-    // TODO: DO NOT FORGET TO REPLACE THE ADDRESS WITH YOUR OWN ADDRESS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    const char* dnaFileAddress = "<insert your address here>\\DNA_Test.txt";
-    const char* nodesFileAddress = "<insert your address here>\\Node_Count.txt";
-    const char* treeFileAddress = "<insert your address here>\\Tree.txt";
+    // TODO: In the following lines of code, please do not forget to replace the file address with your own.
+    const char* dnaFileAddress = "<file address; replace me>\\1DNA_Test.txt";
+    const char* nodesFileAddress = "<file address; replace me>\\1Node_Count.txt";
+    const char* treeFileAddress = "<file address; replace me>\\1Tree.txt";
 
-    const char* two_dnaFileAddress = "<insert your address here>\\DNA_Test2.txt";
-    const char* two_nodesFileAddress = "<insert your address here>\\Node_Count2.txt";
-    const char* two_treeFileAddress = "<insert your address here>\\Tree2.txt";
+    const char* dnaFileAddress2 = "<file address; replace me>\\2DNA_Test.txt";
+    const char* nodesFileAddress2 = "<file address; replace me>\\2Node_Count.txt";
+    const char* treeFileAddress2 = "<file address; replace me>\\2Tree.txt";
 
     // Instantiate tree
     RadixTree rt;
@@ -40,18 +40,22 @@ int main() {
     // Generate random DNA segments and add them to the tree. Prints output to DNA_Test.txt
     for (int i = 0; i < 10; i++)
         rt.addString(generateTestSegment(2 + rand() % 5, true));
-    //Prints generated nodes and their prefixes to Node_Count.txt
+
+    // Prints generated nodes and their prefixes to 1Node_Count.txt
     rt.printNodes(nodesFileAddress);
+
+    // Prints all generated DNA segments, sorted alphabetically (via tree strings) to 1DNA_Test.txt
     rt.printString(dnaFileAddress);
-    //Prints generated tree structure to Tree.txt
+
+    // Prints generated tree structure to 1Tree.txt
     rt.printTree(treeFileAddress);
 
-    for (int i = 0; i < 10000; i++)
+    // Repeat the same process for a larger test sample
+    for (int i = 0; i < 1000; i++)
         rt.addString(generateTestSegment(10 + rand() % 90, false));
-
-    rt.printNodes(two_nodesFileAddress);
-    rt.printString(two_dnaFileAddress);
-    rt.printTree(two_treeFileAddress);
+    rt.printNodes(nodesFileAddress2);
+    rt.printString(dnaFileAddress2);
+    rt.printTree(treeFileAddress2);
 
     system("pause");
     return 0;
