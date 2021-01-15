@@ -106,7 +106,7 @@ private:
 	void printNodesAUX(Node * current);
 
     // --------------------------------------------------------------------------------
-    void printTreeAUX(char * prefix, const Node *node,int prefixlen = 0);
+    void printTreeAUX(char * prefix, const Node *node,int prefixLen = 0);
 
 public:
 

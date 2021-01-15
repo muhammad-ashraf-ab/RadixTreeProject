@@ -26,9 +26,9 @@ int main() {
     srand(time(0));
 
     //Three files to generate outputs in. Replace "<Insert Address Here>" with your preferred address.
-    const char *dnaFileAddress = "E:\\school\\structures bs\\data structures\\project\\inout\\DNA_Test.txt";
-    const char *nodesFileAddress = "E:\\school\\structures bs\\data structures\\project\\inout\\Node_Count.txt";
-    const char *treeFileAddress = "E:\\school\\structures bs\\data structures\\project\\inout\\Tree.txt";
+    const char *dnaFileAddress = "<Include Address Here>\\DNA_Test.txt";
+    const char *nodesFileAddress = "<Include Address Here>\\Node_Count.txt";
+    const char *treeFileAddress = "<Include Address Here>\\Tree.txt";
 
     // Instantiate tree
     RadixTree rt;
