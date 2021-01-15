@@ -1,6 +1,7 @@
-#include <fstream>
-#include "RadixTree.h"
+#include <iostream>
 using namespace std;
+
+#include "RadixTree.h"
 
 int RadixTree::prefix(char* x, int n, char* key, int m)
 {
@@ -214,66 +215,96 @@ int RadixTree::countNodesAux(Node* t) {
         ;
 }
 
-// Addition function updates root with a new root containing the string to be added
-void RadixTree::addString(char* str) {
-    root = insert(root, str);
-}
-
-// Deletion function updates root with a new root that does not contain the string to be deleted
-void RadixTree::deleteString(char* str) {
-    root = remove(root, str);
-}
-
-// Searching function returns boolean value based on the result of the finder function
-bool RadixTree::searchString(char* str) {
-    return find(root, str) != 0;
-}
-
-// Counting strings function returns the total number of string in the current Radix Tree
-int RadixTree::countStrings() {
-    return countStringsAux(root);
-}
-
-// Counting nodes function returns the total number of nodes in the current Radix Tree
-int RadixTree::countNodes() {
-    return countNodesAux(root);
-}
-
-void RadixTree::printNodeAndPrefix(Node* n, char* p, int pLen)
+void RadixTree::printNodeAndPrefix(Node* n, char* p, int pLen, bool echo)
 {
-    if (n->key[0] == 0) { nodeCountFile << "NULL"; }
-    for (int i = 0; i < n->len; i++)
-    {
-        nodeCountFile << n->key[i];
+    if (n->key[0] == 0) {
+        nodesFile << "NULL";
+        if (echo) cout << "NULL";
     }
-    nodeCountFile << ", Prefix: ";
-    for (int i = 0; i < pLen; i++)
-    {
-        nodeCountFile << p[i];
-    }
-    nodeCountFile << endl;
 
+    for (int i = 0; i < n->len; i++) {
+        nodesFile << n->key[i];
+        if (echo) cout << n->key[i];
+    }
+
+    nodesFile << ", Prefix: ";
+    if (echo) cout << ", Prefix: ";
+
+    for (int i = 0; i < pLen; i++) {
+        nodesFile << p[i];
+        if (echo) cout << p[i];
+    }
+
+    nodesFile << endl;
+    if (echo) cout << endl;
 }
 
-void RadixTree::printNodesAux(Node* t)
+void RadixTree::printNodesAux(Node* t, bool echo)
 {
     static int i = 0;
     static char* prefix = new char[99999];
     static int prefixlen = 0;
     if (t != NULL) {
-        nodeCountFile << "Node #" << i << ' ';
-        printNodeAndPrefix(t, prefix, prefixlen);
+        nodesFile << "Node #" << i << ' ';
+        if (echo) cout << "Node #" << i << ' ';
+        printNodeAndPrefix(t, prefix, prefixlen, echo);
         for (int i = 0; i < t->len; i++)
         {
             prefix[prefixlen + i] = t->key[i];
         }
         prefixlen += t->len;
         i++;
-        printNodesAux(t->link);
+        printNodesAux(t->link, echo);
         prefixlen -= t->len;
-        printNodesAux(t->next);
+        printNodesAux(t->next, echo);
     }
 
+}
+
+void RadixTree::printTreeAux(char* p, const RadixTree::Node* node, int pLen, bool echo) {
+    if (node != 0) {
+
+        for (int i = 0; i < pLen; i++)
+        {
+            treeFile << p[i];
+            if (echo) cout << p[i];
+        }
+
+        treeFile << ((node->next != 0) ? "├───" : "└───");
+        if (echo) cout << ((node->next != 0) ? "├───" : "└───");
+
+        for (int i = 0; i < node->len; i++) {
+            if (node->key[0] == 0) {
+                treeFile << "(NULL)";
+                if (echo) cout << "(NULL)";
+                break;
+            }
+            treeFile << node->key[i];
+            if (echo) cout << node->key[i];
+        }
+
+        treeFile << endl;
+        if (echo) cout << endl;
+
+        if (node->next != 0)
+            for (int i = 0; i < 4; i++)
+                p[pLen + i] = (i ? ' ' : '|');
+        else
+            for (int i = 0; i < 4; i++)
+                p[pLen + i] = ' ';
+
+        printTreeAux(p, node->link, pLen + 4, echo);
+
+        if (node->next == 0) {
+
+            for (int i = 0; i < 4; i++)
+                p[pLen + i] = ' ';
+
+            pLen += 4;
+        }
+
+        printTreeAux(p, node->next, pLen, echo);
+    }
 }
 
 void RadixTree::sortNodes(Node** arr, int size) {
@@ -290,7 +321,7 @@ void RadixTree::sortNodes(Node** arr, int size) {
     }
 }
 
-void RadixTree::printStringsAux(Node* t, char* p, int pLen) {
+void RadixTree::printStringsAux(Node* t, char* p, int pLen, bool echo) {
     if (!t) return;
     int itr = 0;
     Node** arr = new Node * [60];
@@ -310,13 +341,16 @@ void RadixTree::printStringsAux(Node* t, char* p, int pLen) {
         {
             for (int i = 0; i < pLen; i++)
             {
-                generatedDNAFile << p[i];
+                segmentsFile << p[i];
+                if (echo) cout << p[i];
             }
             for (int i = 0; i < n->len; i++)
             {
-                generatedDNAFile << n->key[i];
+                segmentsFile << n->key[i];
+                if (echo) cout << n->key[i];
             }
-            generatedDNAFile << endl;
+            segmentsFile << endl;
+            if (echo) cout << endl;
         }
         else
         {
@@ -329,70 +363,58 @@ void RadixTree::printStringsAux(Node* t, char* p, int pLen) {
             {
                 newPrev[i + pLen] = n->key[i];
             }
-            printStringsAux(n->link, newPrev, n->len + pLen);
+            printStringsAux(n->link, newPrev, n->len + pLen, echo);
         }
     }
 }
 
-void RadixTree::printString(const char* address)
+// Addition function, updates root with a new root containing the string to be added
+void RadixTree::addString(char* str) {
+    root = insert(root, str);
+}
+
+// Deletion function, updates root with a new root that does not contain the string to be deleted
+void RadixTree::deleteString(char* str) {
+    root = remove(root, str);
+}
+
+// Searching function returns, boolean value based on the result of the finder function
+bool RadixTree::searchString(char* str) {
+    return find(root, str) != 0;
+}
+
+// Counting strings function, returns the total number of string in the current Radix Tree
+int RadixTree::countStrings() {
+    return countStringsAux(root);
+}
+
+// Counting nodes function, returns the total number of nodes in the current Radix Tree
+int RadixTree::countNodes() {
+    return countNodesAux(root);
+}
+
+// Strings printing function, prints strings in tree sorted in alphabetical order
+void RadixTree::printStrings(const char* address, bool echo)
 {
-    generatedDNAFile.open(address);
-    printStringsAux(root, 0, 0);
-    generatedDNAFile.close();
+    segmentsFile.open(address);
+    printStringsAux(root, 0, 0, echo);
+    segmentsFile.close();
 }
 
-void RadixTree::printNodes(const char* address) {
-    nodeCountFile.open(address);
-    nodeCountFile << "Node count:" << countNodes() << endl;
-    printNodesAux(root);
-    nodeCountFile.close();
+// Node printing function, prints node count, individual nodes, and their respective prefixes
+void RadixTree::printNodes(const char* address, bool echo) {
+    nodesFile.open(address);
+    nodesFile << "Node count:" << countNodes() << endl;
+    if (echo) cout << "Node count:" << countNodes() << endl;
+    printNodesAux(root, echo);
+    nodesFile.close();
 }
 
-void RadixTree::printTreeAux(char* prefix, const RadixTree::Node* node, int prefixLen) {
-    if (node != 0) {
-
-        for (int i = 0; i < prefixLen; i++)
-        {
-            treeFile << prefix[i];
-        }
-
-        treeFile << ((node->next != 0) ? "├───" : "└───");
-
-        for (int i = 0; i < node->len; i++) {
-            if (node->key[0] == 0) {
-                treeFile << "(NULL)";
-                break;
-            }
-            treeFile << node->key[i];
-        }
-
-        treeFile << endl;
-
-        if (node->next != 0)
-            for (int i = 0; i < 4; i++)
-                prefix[prefixLen + i] = (i ? ' ' : '|');
-        else
-            for (int i = 0; i < 4; i++)
-                prefix[prefixLen + i] = ' ';
-
-        printTreeAux(prefix, node->link, prefixLen + 4);
-
-        if (node->next == 0) {
-
-            for (int i = 0; i < 4; i++)
-                prefix[prefixLen + i] = ' ';
-
-            prefixLen += 4;
-        }
-
-        printTreeAux(prefix, node->next, prefixLen);
-    }
-}
-
-void RadixTree::printTree(const char* address) {
+// Tree visualization function, prints a visualization of the entire radix tree
+void RadixTree::printTree(const char* address, bool echo) {
     treeFile.open(address);
     char* prefix = new char[99999];
     prefix[0] = '\0';
-    printTreeAux(prefix, root);
+    printTreeAux(prefix, root, 0, echo);
     treeFile.close();
 }

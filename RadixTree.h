@@ -1,6 +1,7 @@
-using namespace std;
 #ifndef RADIXTREEPROJECT_RADIXTREE_H
 #define RADIXTREEPROJECT_RADIXTREE_H
+#include <fstream>
+using namespace std;
 
 class RadixTree {
 private:
@@ -44,20 +45,22 @@ private:
     // Radix Tree's root node
     Node* root;
 
-    //File streams to print to right files
-    ofstream generatedDNAFile;
-    ofstream nodeCountFile;
+    // File streams to print to right files
+    ofstream segmentsFile;
+    ofstream nodesFile;
     ofstream treeFile;
 
     // ----------------------------------------------------------------------------------------
     // Prefix function, responsible for comparing two character arrays "x" and "key",
     // of lengths "n" and "m" respectively.
+    //
     int prefix(char* x, int n, char* key, int m);
     // Returns the number of common prefix characters
     // ----------------------------------------------------------------------------------------
 
     // ----------------------------------------------------------------------------------------
     // Finder function, responsible for finding key "x" in tree of root node "t"
+    //
     Node* find(Node* t, char* x, int n = 0);
     // Returns pointer to the node corresponding to "x", if found
     // ----------------------------------------------------------------------------------------
@@ -65,11 +68,13 @@ private:
     // ----------------------------------------------------------------------------------------
     // Splitting function, responsible for splitting a node into two at "k"
     // Used as part of the insertion process
+    //
     void split(Node* t, int k);
     // ----------------------------------------------------------------------------------------
 
     // ----------------------------------------------------------------------------------------
     // Insertion function, responsible for inserting a node in its right position
+    //
     Node* insert(Node* t, char* x, int n = 0);
     // Returns pointer to the inserted node
     // ----------------------------------------------------------------------------------------
@@ -77,49 +82,63 @@ private:
     // ----------------------------------------------------------------------------------------
     // Joining function, responsible for joining a node with its link
     // Used as part of the removal process
+    //
     void join(Node* t);
     // ----------------------------------------------------------------------------------------
 
     // ----------------------------------------------------------------------------------------
     // Removal function, responsible for removing key "x" in tree of root node "t"
+    //
     Node* remove(Node* t, char* x, int n = 0);
     // Returns pointer to the node that takes place of removed node
     // ----------------------------------------------------------------------------------------
 
     // ----------------------------------------------------------------------------------------
     // String counting function, responsible for counting strings in tree of root node "t"
+    //
     int countStringsAux(Node* t);
     // ----------------------------------------------------------------------------------------
 
     // ----------------------------------------------------------------------------------------
     // Node counting function, responsible for counting nodes in tree of root node "t"
+    //
     int countNodesAux(Node* t);
     // ----------------------------------------------------------------------------------------
 
     // ----------------------------------------------------------------------------------------
     // Single node and prefix printing function, prints node "n" and its prefix "p"
-    void printNodeAndPrefix(Node* n, char* p, int pLen);
+    // Has the option to echo output to console - false by default
+    //
+    void printNodeAndPrefix(Node* n, char* p, int pLen, bool echo = false);
     // ----------------------------------------------------------------------------------------
 
     // ----------------------------------------------------------------------------------------
     // Node printing function, responsible for printing all nodes in tree of root node "t"
-    void printNodesAux(Node* t);
+    // The function uses the printNodeAndPrefix function defined previously to print them
+    // Has the option to echo output to console - false by default
+    //
+    void printNodesAux(Node* t, bool echo = false);
     // ----------------------------------------------------------------------------------------
 
     // ----------------------------------------------------------------------------------------
     // Tree printing function, responsible for visualizing the entire tree of root node "t"
-    void printTreeAux(char* p, const Node* t, int pLen = 0);
+    // Has the option to echo output to console - false by default
+    //
+    void printTreeAux(char* p, const Node* t, int pLen, bool echo = false);
     // ----------------------------------------------------------------------------------------
 
     // ----------------------------------------------------------------------------------------
     // Node sorting function, responsible for sorting "arr" array of nodes of size "size"
+    //
     void sortNodes(Node** arr, int size);
     // ----------------------------------------------------------------------------------------
 
     // ----------------------------------------------------------------------------------------
     // Strings printing function, responsible for printing all strings in tree of root "t"
     // The function uses the sortNodes function defined previously to sort them alphabetically
-    void printStringsAux(Node* t, char* p, int plen);
+    // Has the option to echo output to console - false by default
+    //
+    void printStringsAux(Node* t, char* p, int plen, bool echo = false);
     // ----------------------------------------------------------------------------------------
 
 public:
@@ -134,10 +153,10 @@ public:
     int countStrings();
     int countNodes();
 
-    // Printing functions, take the address of the file to print to
-    void printNodes(const char* address);
-    void printTree(const char* address);
-    void printString(const char* address);
+    // Printing functions, take the address of the file to print to and a console echo option
+    void printStrings(const char* address, bool echo = false);
+    void printNodes(const char* address, bool echo = false);
+    void printTree(const char* address, bool echo = false);
 };
 
 #endif //RADIXTREEPROJECT_RADIXTREE_H
